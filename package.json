@@ -1,0 +1,20 @@
+{
+  "name": "valldoreix",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  },
+  "dependencies": {
+    "i18next": "^23.15.1",
+    "jquery": "^3.7.1",
+    "ol": "latest",
+    "ol-ext": "^4.0.23",
+    "ol-layerswitcher": "latest",
+    "proj4": "^2.12.1"
+  }
+}
