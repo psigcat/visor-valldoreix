@@ -25,12 +25,19 @@ import DropFile from 'ol-ext/interaction/DropFile';
 import loadGpkg from 'ol-load-geopackage';
 import $ from 'jquery';
 
-const projectName = 'UDDviewer';
-const jsonURL = 'geodata/' + projectName + '.qgs.json',
-      qgisServerURL = 'https://atlas.bithabitat.barcelona/qgisserver/cgi-bin/qgis_mapserv.fcgi',
-      mapproxyServerURL = 'https://atlas.bithabitat.barcelona/mapproxy/service?',
-      qgisProjectFile = '/home/qgis/' + projectName + '/' + projectName + '.qgs';
-let wmsLayers = [],
+const PROJECT_NAME = 'guia',
+      //SERVER_URL = 'http://localhost:5174/valldoreix/';
+      SERVER_URL = 'https://mapa.psig.es/';
+const JSON_URL = SERVER_URL + 'ctbb/js/data/' + PROJECT_NAME + '.qgs.json',
+      QGIS_SERVER_URL = SERVER_URL + 'qgisserver/cgi-bin/qgis_mapserv.fcgi',
+      MAPPROXY_SERVER_URL = SERVER_URL + 'mapproxy/service?',
+      QGIS_PROJECT_FILE = '/home/ubuntu/ctbb/' + PROJECT_NAME + '.qgs';
+/*const PROJECT_NAME = 'UDDviewer';
+const JSON_URL = 'geodata/' + PROJECT_NAME + '.qgs.json',
+      QGIS_SERVER_URL = 'https://atlas.bithabitat.barcelona/qgisserver/cgi-bin/qgis_mapserv.fcgi',
+      MAPPROXY_SERVER_URL = 'https://atlas.bithabitat.barcelona/mapproxy/service?',
+      QGIS_PROJECT_FILE = '/home/qgis/' + PROJECT_NAME + '/' + PROJECT_NAME + '.qgs';
+*/let wmsLayers = [],
     qgisSources = {};
 
 /*
@@ -205,7 +212,7 @@ class LayerSwitcherWithLegend extends LayerSwitcher {
             
             //if (!sublayer.mapproxy) {
               // dynamic from qgis server
-              img.src = qgisServerURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&TRANSPARENT=true&ITEMFONTCOLOR=white&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0&SYMBOLWIDTH=4&ITEMFONTSIZE=10&BOXSPACE=1&MAP=' + qgisProjectFile;
+              img.src = QGIS_SERVER_URL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&TRANSPARENT=true&ITEMFONTCOLOR=white&LAYER='+sublayer.name+'&FORMAT=image/png&SLD_VERSION=1.1.0&SYMBOLWIDTH=4&ITEMFONTSIZE=10&BOXSPACE=1&MAP=' + QGIS_PROJECT_FILE;
 
               // remove image title for all but this layer
               if (lyr.get('title') !== 'Planejament urbanístic')
@@ -230,7 +237,7 @@ class LayerSwitcherWithLegend extends LayerSwitcher {
         } 
         else /*if (!lyr.get('mapproxy') && lyr.get('mapproxy') !== undefined)*/ {
           // dynamic from qgis server
-          img.src = qgisServerURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&TRANSPARENT=true&ITEMFONTCOLOR=white&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0&LAYERTITLE=false&SYMBOLWIDTH=4&ITEMFONTSIZE=10&BOXSPACE=1&MAP=' + qgisProjectFile;
+          img.src = QGIS_SERVER_URL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&TRANSPARENT=true&ITEMFONTCOLOR=white&LAYER='+lyrTitle+'&FORMAT=image/png&SLD_VERSION=1.1.0&LAYERTITLE=false&SYMBOLWIDTH=4&ITEMFONTSIZE=10&BOXSPACE=1&MAP=' + QGIS_PROJECT_FILE;
         }
         /*else {
           // static from directory
@@ -252,7 +259,7 @@ register(proj4);
 const proj25831 = getProjection('EPSG:25831');
 
 const qgisLayers = new LayerGroup({
-  title: 'Urban Data Desk',
+  title: 'Capas temàtics',
   fold: 'open',
   type: 'group'
 });
@@ -309,12 +316,11 @@ const map = new Map({
   }),
   view: new View({
     //projection: proj25831,
-    center: fromLonLat([2.15, 41.4]),
+    center: fromLonLat([1.982222, 41.476667]),
     //center: transform([2.15, 41.4], 'EPSG:4326', proj25831),
-    rotation: Math.PI/4,
     zoom: 13,
     minZoom: 12,
-    extent: [210000, 5050000, 270000, 5090000]
+    //extent: [210000, 5050000, 270000, 5090000]
   })
 });
 
@@ -373,7 +379,7 @@ map.on('pointermove', function (evt) {
         );
 
         if (url) {
-          url += "&MAP=" + qgisProjectFile;
+          url += "&MAP=" + QGIS_PROJECT_FILE;
           //console.log(layerObj.get('title'), url);
 
           fetch(url, {
@@ -590,7 +596,7 @@ dropInteraction.on('addfeatures', function(event) {
 /*
   Load UDD data
   ****************************************/
-$.getJSON(jsonURL, function() {})
+$.getJSON(JSON_URL, function() {})
 .done(function(data) {
   qgisLayers.setLayers(new Collection(loadQgisLayers(data)));
 
@@ -658,12 +664,12 @@ function loadQgisLayer(layer) {
     if (layer.mapproxy) {
       // mapproxy
       name = layer.mapproxy;
-      url = mapproxyServerURL;
+      url = MAPPROXY_SERVER_URL;
     }
     else {
       // qgis
       name = layer.name;
-      url = qgisServerURL;
+      url = QGIS_SERVER_URL;
     }
 
     let layerSource = new TileWMS({
@@ -673,7 +679,7 @@ function loadQgisLayer(layer) {
         'LAYERS': name,
         'TRANSPARENT': true,
         'VERSION': '1.3.0',
-        'MAP': qgisProjectFile
+        'MAP': QGIS_PROJECT_FILE
       },
       serverType: 'qgis',
       //crossOrigin: 'Anonymous'
@@ -681,7 +687,7 @@ function loadQgisLayer(layer) {
 
     // save qgisSource to query layer
     qgisSources[layer.qgisname] = new TileWMS({
-      url: qgisServerURL,
+      url: QGIS_SERVER_URL,
       projection: 'EPSG:3857',
       params: {
         'LAYERS': layer.name,
@@ -742,7 +748,7 @@ function selectFeatureInfo(coordinates) {
       );
 
       if (url) {
-        url += "&MAP=" + qgisProjectFile;
+        url += "&MAP=" + QGIS_PROJECT_FILE;
         //console.log(layerObj.get('qgisname'), url);
 
         fetch(url, {
