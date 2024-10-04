@@ -1,0 +1,259 @@
+@import "node_modules/ol/ol.css";
+@import 'public/fonts/font.css';
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: MatterLight, sans-serif;
+}
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.layer-switcher {
+  top: .5em;
+}
+
+.layer-switcher .panel {
+  border: none;
+  border-radius: 0;
+  background-color: white;
+  color: black;
+}
+
+.layer-switcher .panel > ul > li.layer {
+  display: none;
+}
+
+.layer-switcher li.group > label {
+  color: red;
+}
+
+.layer-switcher > button {
+  display: none !important;
+}
+
+.layer-switcher li.layer label {
+  display: unset;
+}
+
+li.layer i {
+  float: right;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+img.legend {
+  padding-left: 20px;
+  display: none;
+  max-width: 100%;
+}
+
+.ol-control {
+  border-radius: 0;
+}
+
+.ol-control > button {
+  border-radius: 0;
+  background-color: #473ee7;
+  color: white;
+}
+
+.ol-control button:hover {
+  cursor: pointer;
+  color: white;
+}
+
+.ol-control i {
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+   accent-color: #fcb9d4;
+}
+
+.ol-control.ol-layerswitcher-image,
+.ol-control.ol-layerswitcher-image.ol-collapsed {
+  left: 0.5em;
+  right: auto;
+  bottom: 1em;
+  top: auto;
+}
+
+.ol-layerswitcher-image button,
+.ol-layerswitcher-image.ol-collapsed button {
+  display: none;
+}
+
+.ol-control.ol-search {
+  top: 4em;
+  left: 0.5em;
+}
+
+.ol-control.ol-geobt {
+  left: 0.5em;
+  right: auto;
+  top: 6em;
+  bottom: auto;
+}
+
+.ol-control.ol-geobt button::before {
+  border: none;
+  content: "\f041";
+  font-family: FontAwesome;
+  width: auto;
+}
+.ol-control.ol-geobt button::after {
+  box-shadow: none;
+}
+
+.ol-rotate {
+  top: 8em;
+  left: 0.5em;
+  right: auto;
+}
+
+.exportBtn {
+  left: 0.5em;
+  top: 10em;
+}
+
+/*
+ * feature popuop
+ ************************/
+.ol-overlay.window { 
+  width: 474px;
+  max-width: 95%;
+  background: #473ee7;
+  color: white;
+  padding: 0.5em;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  top: 6em;
+  height: auto;
+  bottom: unset;
+  border: 2px solid #fcb9d4;
+}
+
+.ol-overlay.window {
+  left: 0.5em;
+  padding: 0;
+}
+
+.ol-overlay.window .ol-closebox { 
+  color: black;
+  right: 5px;
+  top: 5px;
+}
+.ol-overlay.window .ol-closebox:before { 
+  content: "\f00d";
+  font-family: FontAwesome;
+}
+
+.window h2 {
+  color: black;
+  background-color: #fcb9d4;
+  margin: 0;
+  padding: .3em;
+  font-size: 16px;
+  font-family: MatterLight, sans-serif;
+  text-transform: uppercase;
+  position: relative;
+}
+
+h3 {
+  font-size: 16px;
+  font-family: MatterLight, sans-serif;
+  border-bottom: 1px solid black;
+}
+
+.window .content {
+  padding: 20px;
+}
+
+.window .content p {
+  margin-top: 0;
+}
+
+.window .title {
+  margin-left: 5px;
+}
+
+#windowFeature {
+  height: 650px;
+}
+
+#windowFeature .content {
+  overflow: scroll;
+  height: 90%;
+}
+
+#windowFeature .label {
+  text-decoration: underline;
+}
+#windowFeature .content .list {
+  margin: 0;
+  list-style: none;
+  padding-left: 0;
+  color: black;
+}
+
+#windowFeature .content .list .field-content {
+  color: white;
+}
+
+/*
+ * feature tooltip
+ ************************/
+.ol-popup {
+    display: none;
+    position: absolute;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+}
+
+.featureTooltip .ol-popup:after, .featureTooltip .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.featureTooltip .ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.featureTooltip .ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-content {
+    min-width: 300px;
+    max-height: 450px;
+    overflow-x: auto;
+}
+
+.ol-popup-content h2 {
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+}
+
+.featureTooltip {
+  z-index: 3;
+}

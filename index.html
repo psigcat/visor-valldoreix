@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" type="image/ico" href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visor Valldoreix</title>
+
+    <!-- helper files for shape file dropping -->
+    <script src="https://gipong.github.io/shp2geojson.js/lib/jszip.js"></script>
+    <script src="https://gipong.github.io/shp2geojson.js/lib/jszip-utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.1/proj4.js"></script>
+    <script src="preprocess.js"></script>
+    <script src="preview.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="windowFeature" class="window">
+      <h2>
+        <i class="fa fa-file-text-o"></i>
+        <span class="title">Informació</span>
+      </h2>
+      <div class="content">
+        <div class="content-layers"></div>
+      </div>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

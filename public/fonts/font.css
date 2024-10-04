@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'MatterLight';
+    src: url('/fonts/MatterLight.eot');
+    src: url('/fonts/MatterLight.eot') format('embedded-opentype'),
+         url('/fonts/MatterLight.woff2') format('woff2'),
+         url('/fonts/MatterLight.woff') format('woff'),
+         url('/fonts/MatterLight.ttf') format('truetype'),
+         url('/fonts/MatterLight.svg#MatterLight') format('svg');
+}
