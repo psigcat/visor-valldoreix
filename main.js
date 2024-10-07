@@ -27,20 +27,12 @@ import DropFile from 'ol-ext/interaction/DropFile';
 import loadGpkg from 'ol-load-geopackage';
 import $ from 'jquery';
 
-const PROJECT_NAME = 'guia',
-      SERVER_URL_LOCAL = 'http://localhost:5174/valldoreix/',
-      SERVER_URL = 'https://mapa.psig.es/';
-const //JSON_URL = SERVER_URL + 'ctbb/js/data/' + PROJECT_NAME + '.qgs.json',
-      JSON_URL = SERVER_URL_LOCAL + 'geodata/2024_mapacomplert.qgs.json',
+const PROJECT_NAME = '2024_mapacomplert.qgs',
+      SERVER_URL = 'http://192.168.207.245/';
+const JSON_URL = SERVER_URL + 'geodata/' + PROJECT_NAME + '.json',
       QGIS_SERVER_URL = SERVER_URL + 'qgisserver/cgi-bin/qgis_mapserv.fcgi',
       MAPPROXY_SERVER_URL = SERVER_URL + 'mapproxy/service?',
-      QGIS_PROJECT_FILE = '/home/ubuntu/ctbb/' + PROJECT_NAME + '.qgs';
-/*const PROJECT_NAME = 'UDDviewer';
-const JSON_URL = 'geodata/' + PROJECT_NAME + '.qgs.json',
-      QGIS_SERVER_URL = 'https://atlas.bithabitat.barcelona/qgisserver/cgi-bin/qgis_mapserv.fcgi',
-      MAPPROXY_SERVER_URL = 'https://atlas.bithabitat.barcelona/mapproxy/service?',
-      QGIS_PROJECT_FILE = '/home/qgis/' + PROJECT_NAME + '/' + PROJECT_NAME + '.qgs';
-*/
+      QGIS_PROJECT_FILE = '/home/admin-qgis/qgis/' + PROJECT_NAME;
 let wmsLayers = [],
     qgisSources = {};
 
