@@ -5,10 +5,12 @@ import './style.css';
 
 import {Map, View, Collection} from 'ol';
 import {Tile as TileLayer, Vector as VectorLayer, Group as LayerGroup} from 'ol/layer';
-import {Vector as VectorSource, BingMaps, XYZ, OSM, TileWMS} from 'ol/source';
+import {Vector as VectorSource, BingMaps, XYZ, OSM, TileWMS, WMTS} from 'ol/source';
+import {WMTS as WMTSgrid} from 'ol/tilegrid';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {GPX, GML, GeoJSON, IGC, KML, TopoJSON} from 'ol/format';
 import {defaults} from 'ol/control';
+import {getTopLeft, getWidth} from 'ol/extent';
 import {get as getProjection, transform, fromLonLat, toLonLat} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
 import {unByKey} from 'ol/Observable';
@@ -26,9 +28,10 @@ import loadGpkg from 'ol-load-geopackage';
 import $ from 'jquery';
 
 const PROJECT_NAME = 'guia',
-      //SERVER_URL = 'http://localhost:5174/valldoreix/';
+      SERVER_URL_LOCAL = 'http://localhost:5174/valldoreix/',
       SERVER_URL = 'https://mapa.psig.es/';
-const JSON_URL = SERVER_URL + 'ctbb/js/data/' + PROJECT_NAME + '.qgs.json',
+const //JSON_URL = SERVER_URL + 'ctbb/js/data/' + PROJECT_NAME + '.qgs.json',
+      JSON_URL = SERVER_URL_LOCAL + 'geodata/2024_mapacomplert.qgs.json',
       QGIS_SERVER_URL = SERVER_URL + 'qgisserver/cgi-bin/qgis_mapserv.fcgi',
       MAPPROXY_SERVER_URL = SERVER_URL + 'mapproxy/service?',
       QGIS_PROJECT_FILE = '/home/ubuntu/ctbb/' + PROJECT_NAME + '.qgs';
@@ -37,7 +40,8 @@ const JSON_URL = 'geodata/' + PROJECT_NAME + '.qgs.json',
       QGIS_SERVER_URL = 'https://atlas.bithabitat.barcelona/qgisserver/cgi-bin/qgis_mapserv.fcgi',
       MAPPROXY_SERVER_URL = 'https://atlas.bithabitat.barcelona/mapproxy/service?',
       QGIS_PROJECT_FILE = '/home/qgis/' + PROJECT_NAME + '/' + PROJECT_NAME + '.qgs';
-*/let wmsLayers = [],
+*/
+let wmsLayers = [],
     qgisSources = {};
 
 /*
@@ -269,10 +273,42 @@ const bingSource = new BingMaps({
   imagerySet: 'Aerial',
 });
 
+let resolutionsBG = new Array(18),
+    matrixIdsBG = new Array(18),
+    projection4326 = getProjection('EPSG:4326');
+let projectionExtentBG  = projection4326.getExtent();
+let sizeBG = getWidth(projectionExtentBG) / 512;
+for (let z = 0; z < 18; ++z) {
+  // generate resolutions and matrixIds arrays for this WMTS
+  resolutionsBG[z] = sizeBG / Math.pow(2, z);
+  matrixIdsBG[z] = "EPSG:4326:" + z;
+}
+
+let topoSource = new TileWMS({
+  url: 'https://ide.amb.cat/geoserveis/services/topografia_1000/MapServer/WMSServer',
+  projection: 'EPSG:3857',
+  params: {'LAYERS': '1,2,3,5,7,9,10,11,12,14,15,16,18,19,20,22,23,24,26,28,29'}
+});
+
+let ortoSource = new WMTS({
+  url: 'https://www.ign.es/wmts/pnoa-ma',
+  layer: 'OI.OrthoimageCoverage',
+  matrixSet: 'EPSG:4326',
+  format: 'image/png',
+  projection: projection4326,
+  tileGrid: new WMTSgrid({
+    origin: getTopLeft(projectionExtentBG),
+    resolutions: resolutionsBG,
+    matrixIds: matrixIdsBG
+  }),
+  style: 'default',
+  attributions: 'Instituto Geográfico Nacional de España'
+});
+
 const map = new Map({
   target: 'map',
   layers: [
-    new TileLayer({
+    /*new TileLayer({
       title: 'dark',
       baseLayer: true,
       type: 'base',
@@ -283,6 +319,7 @@ const map = new Map({
       }),
       visible: false
     }),
+
     new TileLayer({
       title: 'light',
       baseLayer: true,
@@ -294,6 +331,7 @@ const map = new Map({
       }),
       visible: true
     }),
+
     new TileLayer({
       title: 'satellite',
       baseLayer: true,
@@ -301,7 +339,28 @@ const map = new Map({
       preload: Infinity,
       source: bingSource,
       visible: false
+    }),*/
+
+    new TileLayer({
+      name: 'baseLayerTopoAMB',
+      title: 'Topogràfic (by AMB)',
+      qgistitle: '@ Capes topografiques AMB',
+      baseLayer: true,
+      type: 'base',
+      visible: true,
+      source: topoSource,
     }),
+
+    new TileLayer({
+      name: 'baseLayerFoto',
+      title: 'Ortofoto (by IGN)',
+      qgistitle: '@ Capes ortofotografiques',
+      baseLayer: true,
+      type: 'base',
+      visible: false,
+      source: ortoSource,
+    }),
+
     new TileLayer({
       title: 'blank',
       baseLayer: true,
@@ -309,6 +368,7 @@ const map = new Map({
       source: null,
       visible: false
     }),
+
     qgisLayers
   ],
   controls: defaults({
@@ -325,7 +385,7 @@ const map = new Map({
 });
 
 // base layer switcher
-if (bingSource.getState() === 'ready') {
+if (ortoSource.getState() === 'ready') {
   map.addControl(new LayerSwitcherImage({
     collapsed: false,
     displayInLayerSwitcher: function(layer) {
@@ -334,8 +394,8 @@ if (bingSource.getState() === 'ready') {
   }));
 }
 else {
-  var key = bingSource.on('change', function() {
-    if (bingSource.getState() === 'ready') {
+  var key = ortoSource.on('change', function() {
+    if (ortoSource.getState() === 'ready') {
       unByKey(key);
       map.addControl(new LayerSwitcherImage({
         collapsed: false,
