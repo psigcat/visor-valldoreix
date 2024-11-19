@@ -22,7 +22,7 @@ import Button from 'ol-ext/control/Button';
 import Overlay from 'ol-ext/control/Overlay';
 import LayerSwitcherImage from 'ol-ext/control/LayerSwitcherImage';
 import GeolocationButton from 'ol-ext/control/GeolocationButton';
-import SearchNominatim from 'ol-ext/control/SearchNominatim';
+//import SearchNominatim from 'ol-ext/control/SearchNominatim';
 import DropFile from 'ol-ext/interaction/DropFile';
 import loadGpkg from 'ol-load-geopackage';
 import $ from 'jquery';
@@ -32,7 +32,7 @@ const PROJECT_NAME = '2024_mapacomplert.qgs',
 const JSON_URL = SERVER_URL + 'geodata/' + PROJECT_NAME + '.json',
       QGIS_SERVER_URL = SERVER_URL + 'qgisserver/cgi-bin/qgis_mapserv.fcgi',
       MAPPROXY_SERVER_URL = SERVER_URL + 'mapproxy/service?',
-      QGIS_PROJECT_FILE = '/home/admin-qgis/qgis/' + PROJECT_NAME;
+      QGIS_PROJECT_FILE = '/srv/qgis/' + PROJECT_NAME;
 let wmsLayers = [],
     qgisSources = {};
 
@@ -368,9 +368,8 @@ const map = new Map({
   }),
   view: new View({
     //projection: proj25831,
-    center: fromLonLat([1.982222, 41.476667]),
-    //center: transform([2.15, 41.4], 'EPSG:4326', proj25831),
-    zoom: 13,
+    center: fromLonLat([2.0385222, 41.45849]),
+    zoom: 15,
     minZoom: 12,
     //extent: [210000, 5050000, 270000, 5090000]
   })
@@ -904,7 +903,7 @@ function fieldIsVisibleInLayer(fieldName, childLayer) {
 /*
   Geocoder
   ****************************************/
-const searchSource = new VectorSource();
+/*const searchSource = new VectorSource();
 map.addLayer(new VectorLayer({
   source: searchSource,
   style: new Style({
@@ -954,7 +953,7 @@ fetch(
 
   map.getView().fit(geometry);
   map.addControl(search);
-});
+});*/
 
 /*
   Export map as PNG image
