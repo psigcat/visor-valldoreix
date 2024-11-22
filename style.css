@@ -88,6 +88,10 @@ input[type="checkbox"] {
   display: none;
 }
 
+.ol-layerswitcher-image li:hover p {
+  font-size: 0.6em;
+}
+
 .ol-control.ol-search {
   top: 4em;
   left: 0.5em;

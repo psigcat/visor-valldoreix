@@ -341,6 +341,7 @@ const map = new Map({
       type: 'base',
       visible: true,
       source: topoSource,
+      preview: 'https://ide.amb.cat/geoserveis/services/topografia_1000/MapServer/WMSServer?REQUEST=GetMap&SERVICE=WMS&VERSION=1.3.0&FORMAT=image%2Fpng&STYLES=&TRANSPARENT=true&LAYERS=1%2C2%2C3%2C5%2C7%2C9%2C10%2C11%2C12%2C14%2C15%2C16%2C18%2C19%2C20%2C22%2C23%2C24%2C26%2C28%2C29&WIDTH=256&HEIGHT=256&CRS=EPSG%3A3857&BBOX=226559.3518372625%2C5080004.899832813%2C226865.0999504032%2C5080310.6479459535'
     }),
 
     new TileLayer({
@@ -351,6 +352,7 @@ const map = new Map({
       type: 'base',
       visible: false,
       source: ortoSource,
+      preview: 'https://www.ign.es/wmts/pnoa-ma?layer=OI.OrthoimageCoverage&style=default&tilematrixset=EPSG%3A4326&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=EPSG%3A4326%3A17&TileCol=132560&TileRow=35349'
     }),
 
     new TileLayer({
@@ -376,6 +378,28 @@ const map = new Map({
 });
 
 // base layer switcher
+if (topoSource.getState() === 'ready') {
+  map.addControl(new LayerSwitcherImage({
+    collapsed: false,
+    displayInLayerSwitcher: function(layer) {
+      return (layer.get("baseLayer")); 
+    }
+  }));
+}
+else {
+  var key = topoSource.on('change', function() {
+    if (topoSource.getState() === 'ready') {
+      unByKey(key);
+      map.addControl(new LayerSwitcherImage({
+        collapsed: false,
+        displayInLayerSwitcher: function(layer) {
+          return (layer.get("baseLayer")); 
+        }
+      }));
+    }
+  })
+}      
+
 if (ortoSource.getState() === 'ready') {
   map.addControl(new LayerSwitcherImage({
     collapsed: false,
